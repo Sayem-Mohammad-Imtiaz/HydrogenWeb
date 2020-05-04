@@ -1,0 +1,8 @@
+body {
+    height: 100vh;
+    padding: 0;
+}
+
+.grey-box {
+    background-color: grey;
+}
