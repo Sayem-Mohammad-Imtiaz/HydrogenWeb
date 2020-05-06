@@ -23,40 +23,14 @@ import java.util.Map;
 public class DockerService {
     private DockerClient docker;
     @Value("${docker.image.id}")
-    private String dockerImageID="ashwinkj/hydrogen_env";
-    private String id="d7eddea3fb00";
-    public String baseHydrogenPath="/home/Hydrogen/MVICFG/";
+    private String dockerImageID;
+    @Value("${docker.id}")
+    private String id;
+    @Value("${hydrogen.path}")
+    public String baseHydrogenPath;
 
     public DockerService() throws DockerCertificateException, DockerException, InterruptedException {
         docker = DefaultDockerClient.fromEnv().build();
-//        docker=DefaultDockerClient.builder().
-//        docker.pull(this.dockerImageID);
-//
-//        final Map<String, List<PortBinding>> portBindings = new HashMap<>();
-//
-//        final String[] ports = {"80", "22"};
-//        for (String port : ports) {
-//            List<PortBinding> hostPorts = new ArrayList<>();
-//            hostPorts.add(PortBinding.of("0.0.0.0", port));
-//            portBindings.put(port, hostPorts);
-//        }
-//
-//        List<PortBinding> randomPort = new ArrayList<>();
-//        randomPort.add(PortBinding.randomPort("0.0.0.0"));
-//        portBindings.put("443", randomPort);
-//
-//        final HostConfig hostConfig = HostConfig.builder().portBindings(portBindings).build();
-//
-//        final ContainerConfig containerConfig = ContainerConfig.builder()
-//                .hostConfig(hostConfig)
-//                .image(this.dockerImageID).exposedPorts(ports)
-//                .build();
-//
-//        final ContainerCreation creation = docker.createContainer(containerConfig);
-//        this.id = creation.id();
-//
-//        docker.startContainer(id);
-
     }
     public String runCommand(String[] command) throws DockerException, InterruptedException {
         final ExecCreation execCreation = docker.execCreate(
@@ -67,7 +41,11 @@ public class DockerService {
         return execOutput;
     }
 
-    public void copyFromDocker(String path) throws DockerException, InterruptedException, IOException {
+    public void copyFromDocker(String path, String outputPath) throws DockerException, InterruptedException, IOException {
+        path=this.baseHydrogenPath+path;
+//        path="/home/Hydrogen/MVICFG/"+path;
+//        this.id="d7eddea3fb00";
+
         try (final TarArchiveInputStream tarStream =
                      new TarArchiveInputStream(docker.archiveContainer(this.id, path))) {
             TarArchiveEntry entry;
@@ -77,8 +55,13 @@ public class DockerService {
                 // Do stuff with the files in the stream
                 if(entry.isFile())
                 {
-                    System.out.println(entry.getName());
-                    final File file = new File(entry.getName());
+                    String filename=entry.getName();
+                    filename=filename.substring(filename.lastIndexOf("/")+1,filename.length());
+                    if(!filename.equals("MVICFG.dot"))
+                        continue;
+
+                    filename=outputPath+"/"+filename;
+                    final File file = new File(filename);
 
                     final File parent = file.getParentFile();
                     if (!parent.exists()) {
@@ -100,11 +83,17 @@ public class DockerService {
 
     public void copyToDocker(String fromPath,String toPath ) throws InterruptedException, DockerException, IOException {
         System.out.println(new java.io.File(fromPath).toPath());
+        toPath=this.baseHydrogenPath+"/"+toPath;
+        System.out.println(toPath);
+
         docker.copyToContainer
                 (new java.io.File(fromPath).toPath(), this.id, toPath);
 
     }
     public void compile(String path, String filename, String binaryFileName) throws DockerException, InterruptedException {
+
+        path=this.baseHydrogenPath+path;
+
         String[] command = {"sh", "-c", "cd "+path+";" +
                 " clang -c -O0 -Xclang -disable-O0-optnone -g -emit-llvm -S "+filename
                 +" -o "+binaryFileName};
@@ -119,37 +108,49 @@ public class DockerService {
     public void runHydrogen(String path, String filenameV1, String filenameV2, String binaryFileNameV1,
                             String binaryFileNameV2)
             throws DockerException, InterruptedException {
+
+        filenameV1="../"+path+"/"+filenameV1;
+        filenameV2="../"+path+"/"+filenameV2;
+        binaryFileNameV1="../"+path+"/"+binaryFileNameV1;
+        binaryFileNameV2="../"+path+"/"+binaryFileNameV2;
+
         String[] command = {"sh", "-c", "cd "+this.baseHydrogenPath+"/BuildNinja; " +
-                " ./Hydrogen.out ../"+binaryFileNameV1+" ../"+binaryFileNameV2+
-                " :: ../"+filenameV1+" :: ../"+filenameV2};
+                " ./Hydrogen.out "+binaryFileNameV1+" "+binaryFileNameV2+
+                " :: "+filenameV1+" :: "+filenameV2};
+        this.runCommand(command);
+    }
+    public void clearDirectory(String path)
+            throws DockerException, InterruptedException {
+        path=this.baseHydrogenPath+path;
+        String[] command = {"sh", "-c", "cd "+path+"; rm -rf *;"};
         this.runCommand(command);
     }
 
 
-    public static void main(String [] args)
-    {
-        String[] command = {"sh", "-c", "cd /home/Hydrogen/MVICFG/;ls"};
-
-        try {
-            DockerService ds=new DockerService();
-            ds.compile(ds.baseHydrogenPath+"TestPrograms/Buggy","Prog.c","ProgV1.bc");
-            ds.compile(ds.baseHydrogenPath+"TestPrograms/Correct","Prog.c","ProgV2.bc");
-            //ds.buildHydrogen();
-           // System.out.println(ds.runCommand(command));
-
-            ds.runHydrogen("","TestPrograms/Buggy/Prog.c","TestPrograms/Correct/Prog.c",
-                    "TestPrograms/Buggy/ProgV1.bc",
-                    "TestPrograms/Correct/ProgV2.bc");
-//            ds.copyToDocker("lokkhi", "/hydrogen/TestPrograms/New/");
-            ds.copyFromDocker(ds.baseHydrogenPath+"/BuildNinja/");
-        } catch (DockerCertificateException e) {
-            e.printStackTrace();
-        } catch (DockerException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String [] args)
+//    {
+//        String[] command = {"sh", "-c", "cd /home/Hydrogen/MVICFG/;ls"};
+//
+//        try {
+//            DockerService ds=new DockerService();
+////            ds.compile(ds.baseHydrogenPath+"TestPrograms/Buggy","Prog.c","ProgV1.bc");
+////            ds.compile(ds.baseHydrogenPath+"TestPrograms/Correct","Prog.c","ProgV2.bc");
+////            //ds.buildHydrogen();
+////           // System.out.println(ds.runCommand(command));
+////
+////            ds.runHydrogen("","TestPrograms/Buggy/Prog.c","TestPrograms/Correct/Prog.c",
+////                    "TestPrograms/Buggy/ProgV1.bc",
+////                    "TestPrograms/Correct/ProgV2.bc");
+//////            ds.copyToDocker("lokkhi", "/hydrogen/TestPrograms/New/");
+//            ds.copyFromDocker("BuildNinja","hydrogen_analysis/hydrogen_output/v1v2");
+//        } catch (DockerCertificateException e) {
+//            e.printStackTrace();
+//        } catch (DockerException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

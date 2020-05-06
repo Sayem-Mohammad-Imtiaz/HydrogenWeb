@@ -15,63 +15,51 @@
 <body>
     <div id="app">
         <section id="upper_half">
-            <div class="col-12">
-                <div class="row d-flex justify-content-center">
-                    <div class="text-center">
-                        <h1>A Web demo for Program Analysis tool Hydrogen</h1>
+            <form class="form-horizontal" th:action="@{/analyze}" method="post" enctype="multipart/form-data">
+                <div class="col-12">
+                    <div th:if="${message ne null}" class="row">
+                        <div class="col-sm-6 col-sm-offset-3">
+                            <h4 class="text-danger well well-sm text-center" th:text="${message}"></h4>
+                        </div>
                     </div>
-                </div>
-                <div class="row d-flex justify-content-center mt-5">
-                    <div class="col-md-6 grey-box text-center">
-                        <h3>Please upload versions of a program for building MVICFG</h3>
+
+                    <div class="row d-flex justify-content-center">
+                        <div class="text-center">
+                            <h1>A Web demo for Program Analysis tool Hydrogen</h1>
+                        </div>
                     </div>
-                </div>
-                <div class="row d-flex justify-content-center mt-5">
-                    <div class="col-sm d-flex justify-content-center">
-                        <div class="col-md-2">
-                            <div class="row">
-                                <strong>Version1(.c)</strong>
-                            </div>
-                            <div class="row mt-2">
-                                <input type="file" @change="processFile($event, 'version1')">
+                    <div class="row d-flex justify-content-center mt-5">
+                        <div class="col-md-6 grey-box text-center">
+                            <h3>Please upload versions of a program for building MVICFG</h3>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-center mt-5">
+                        <div class="col-sm d-flex justify-content-center">
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <strong>Zipped files</strong>
+                                </div>
+                                <div class="row mt-2">
+                                    <input type="file" name="version1">
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm d-flex justify-content-center">
-                        <div class="col-md-2">
-                            <div class="row">
-                                <strong>Version2(.c)</strong>
-                            </div>
-                            <div class="row mt-2">
-                                <input type="file" @change="processFile($event, 'version2')">
-                            </div>
+                    <div class="col-sm d-flex justify-content-end mt-5">
+                        <div class="form-check px-3">
+                            <input type="checkbox" class="form-check-input" id="apa" v-model="acyclicPathsAdded">
+                            <label class="form-check-label" for="apa">Acyclic paths added</label>
+                        </div>
+                        <div class="form-check px-3">
+                            <input type="checkbox" class="form-check-input" id="apr" v-model="acyclicPathsRemoved">
+                            <label class="form-check-label" for="apr">Acyclic paths removed</label>
                         </div>
                     </div>
-                    <div class="col-sm d-flex justify-content-center">
-                        <div class="col-md-2">
-                            <div class="row">
-                                <strong>Version3(.c)</strong>
-                            </div>
-                            <div class="row mt-2">
-                                <input type="file" @change="processFile($event, 'version3')">
-                            </div>
-                        </div>
+                    <div class="col-sm d-flex justify-content-center mt-5">
+                        <button type="submit" class="btn btn-success">Build MVICFG</button>
                     </div>
                 </div>
-                <div class="col-sm d-flex justify-content-end mt-5">
-                    <div class="form-check px-3">
-                        <input type="checkbox" class="form-check-input" id="apa" v-model="acyclicPathsAdded">
-                        <label class="form-check-label" for="apa">Acyclic paths added</label>
-                    </div>
-                    <div class="form-check px-3">
-                        <input type="checkbox" class="form-check-input" id="apr" v-model="acyclicPathsRemoved">
-                        <label class="form-check-label" for="apr">Acyclic paths removed</label>
-                    </div>
-                </div>
-                <div class="col-sm d-flex justify-content-center mt-5">
-                    <button type="button" class="btn btn-success" v-on:click="buildMVICFG">Build MVICFG</button>
-                </div>
-            </div>
+            </form>
         </section>
 
 
