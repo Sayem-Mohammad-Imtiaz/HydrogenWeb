@@ -1,5 +1,5 @@
---- hydrogen_analysis/user_program/prime/primev3.c	2020-05-07 14:09:59.000000000 -0500
-+++ hydrogen_analysis/user_program/prime/primev4.c	2020-05-07 14:09:59.000000000 -0500
+--- hydrogen_analysis/user_program/prime/primev3.c	2020-05-07 15:32:21.000000000 -0500
++++ hydrogen_analysis/user_program/prime/primev4.c	2020-05-07 15:32:21.000000000 -0500
 @@ -8,2 +8 @@
 -	int num = 2;
 -	int max;
