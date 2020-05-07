@@ -53,6 +53,8 @@ public class Controller {
         Map<String,String> resultOptions=new HashMap<>();
 
         try {
+            String[] command = {"sh", "-c", "cd /home/Hydrogen/MVICFG/;mkdir "+this.hydrogenTestDirectory+";"};
+            dockerService.runCommand(command);
             FileUtil.createUploadDir(this.uploadDirectory);
             //FileUtil.createUploadDir(this.testOutputDirectory);
 
