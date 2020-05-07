@@ -1,0 +1,13 @@
+--- hydrogen_analysis/user_program/test/version1.c	2020-05-07 06:16:36.000000000 -0500
++++ hydrogen_analysis/user_program/test/version2.c	2020-05-07 06:16:36.000000000 -0500
+@@ -5,2 +5,2 @@
+-  area = .5 * a * b;
+-  if (area > 0)
++  area = (a * b) / 2;
++  if (area > 0) {
+@@ -8,2 +8,3 @@
+-  else
+-    printf("The area of (%.4f,%.4f),(%.4f,0) and (0,%.4f) is %.4f.", a, b, a, b, -area);
++  } else {
++    printf("The area of (%.4f,%.4f),(%.4f,0) and (0,%.4f) is %.4f.", a, b, a, b, (-1) * area);
++  }

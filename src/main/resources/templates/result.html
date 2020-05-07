@@ -16,7 +16,6 @@
 
     <div id="page-wrapper">
 
-
         <div class="row">
             <div class="col-sm-12">
                 <div class="jumbotron" style=  "overflow: scroll;">
@@ -27,6 +26,9 @@
                                     <option th:each="instance : ${resultOptions}" th:value="${instance.key}">
                                         [[${instance.value}]]
                                     </option>
+<!--                                    <option value="version1.c_version3.c">-->
+<!--                                        version1.c - version3.c-->
+<!--                                    </option>-->
                                 </select>
                         </div>
                     </div>
@@ -37,6 +39,26 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-offset-1 col-sm-10">
+                <h2 class="strong">Summary</h2>
+                <table class="table table-striped table-hover table-bordered" id="summaryTable">
+                    <thead>
+                    <tr>
+                        <th>Pair</th>
+                        <th id="verion1Locheader"></th>
+                        <th id="verion2Locheader"></th>
+                        <th>Churn Rate</th>
+                        <th>MVICFG Size (#Nodes, #Edges)</th>
+                        <th>Build Time (Seconds)</th>
+                    </tr>
+                    </thead>
+                    <tbody >
+                    </tbody>
+                </table>
             </div>
         </div>
 

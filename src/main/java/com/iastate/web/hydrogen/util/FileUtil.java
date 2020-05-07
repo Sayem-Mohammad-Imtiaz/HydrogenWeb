@@ -12,10 +12,81 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class FileUtil {
+
+    public static String createDiffFile(String file1, String file2, String outpath) throws IOException {
+//       System.out.println("Diff: "+file1+" "+file2);
+        ProcessBuilder builder = new ProcessBuilder();
+        builder.command("sh", "-c", "diff -U 0 "+file1+" "+file2+" > "+outpath+"/diff.diff");
+        builder.redirectErrorStream(true);
+        Process process = builder.start();
+        InputStream is = process.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+        String l = null;
+        while ((l = reader.readLine()) != null) {
+//               System.out.println(l);
+        }
+        return outpath+"/diff.diff";
+    }
+
+    public static Integer[] getMVICFGSize(String path) throws IOException {
+        Integer edgeCount=0;
+        String line;
+        Set<Integer> nodeCount=new HashSet<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            while ((line = br.readLine()) != null) {
+                line=line.trim();
+                if(line.matches("^\"[0-9]+\"\\s+->\\s+\"[0-9]+\".*"))
+                {
+                    String[] splited = line.split("\\s+");
+                    nodeCount.add(Integer.parseInt(splited[0].replace("\"","")));
+                    edgeCount++;
+                }
+            }
+        }
+        return new Integer[]{nodeCount.size(), edgeCount};
+    }
+
+    public static Integer getChurnRate(String path) throws IOException {
+        int count=0;
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            while ((line = br.readLine()) != null) {
+                if(line.startsWith("@@"))
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    public static Integer countLines(String path) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        int lines = 0;
+        while (reader.readLine() != null) lines++;
+        reader.close();
+        return lines;
+    }
+
+    public static void saveBuildTime(String path, float second) throws IOException {
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(path), "utf-8"))) {
+            writer.write(String.valueOf(second));
+        }
+    }
+    public static Float readBuildTime(String path) throws IOException {
+        FileInputStream fisTargetFile = new FileInputStream(new File(path));
+
+        String s= IOUtils.toString(fisTargetFile, "UTF-8");
+        s=s.trim();
+        return Float.parseFloat(s);
+    }
     public static String readFile(String path) throws IOException {
         FileInputStream fisTargetFile = new FileInputStream(new File(path));
 

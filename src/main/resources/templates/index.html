@@ -1,83 +1,50 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>VUE</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="./index.css">
-    <link th:href="@{/css/index.css}" rel="stylesheet" type="text/css"/>
+    <th:block th:replace="common/includes :: includes"></th:block>
+    <script src="//d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/@hpcc-js/wasm@0.3.6/dist/index.min.js"></script>
+    <script src="https://unpkg.com/d3-graphviz@3.0.0/build/d3-graphviz.js"></script>
+    <script th:src="@{/js/result.js}" type="text/javascript"></script>
+    <title>Hydrogen :: Web Interface</title>
 </head>
-
 <body>
-    <div id="app">
-        <section id="upper_half">
-            <form class="form-horizontal" th:action="@{/analyze}" method="post" enctype="multipart/form-data">
-                <div class="col-12">
-                    <div th:if="${message ne null}" class="row">
-                        <div class="col-sm-6 col-sm-offset-3">
-                            <h4 class="text-danger well well-sm text-center" th:text="${message}"></h4>
-                        </div>
-                    </div>
 
-                    <div class="row d-flex justify-content-center">
-                        <div class="text-center">
-                            <h1>A Web demo for Program Analysis tool Hydrogen</h1>
+
+<div id="wrapper">
+    <th:block th:replace="common/header :: header"></th:block>
+
+    <div id="page-wrapper">
+
+
+
+        <div class="row">
+            <div class="col-sm-offset-3 col-sm-6">
+                <div class="well" style="margin: auto">
+                    <form class="" th:action="@{/analyze}" method="post" enctype="multipart/form-data">
+                        <div >
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="filename" disabled/>
+                                <span class="input-group-btn">
+                                    <label class="btn btn-default">
+                                        Browse <input type="file" name="version1" onchange="$('#filename').val($(this).val().replace(/C:\\fakepath\\/i, ''))" hidden/>
+                                    </label>
+                                </span>
+                            </div><!-- /input-group -->
+                        </div><!-- /.col-lg-6 -->
+
+                        <div class="form-group" style="padding: 10px">
+                            <button type="submit" class="btn btn-primary pull-right">Build MVICFG</button>
                         </div>
-                    </div>
-                    <div class="row d-flex justify-content-center mt-5">
-                        <div class="col-md-6 grey-box text-center">
-                            <h3>Please upload versions of a program for building MVICFG</h3>
-                        </div>
-                    </div>
-                    <div class="row d-flex justify-content-center mt-5">
-                        <div class="col-sm d-flex justify-content-center">
-                            <div class="col-md-2">
-                                <div class="row">
-                                    <strong>Zipped files</strong>
-                                </div>
-                                <div class="row mt-2">
-                                    <input type="file" name="version1">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm d-flex justify-content-end mt-5">
-                        <div class="form-check px-3">
-                            <input type="checkbox" class="form-check-input" id="apa" v-model="acyclicPathsAdded">
-                            <label class="form-check-label" for="apa">Acyclic paths added</label>
-                        </div>
-                        <div class="form-check px-3">
-                            <input type="checkbox" class="form-check-input" id="apr" v-model="acyclicPathsRemoved">
-                            <label class="form-check-label" for="apr">Acyclic paths removed</label>
-                        </div>
-                    </div>
-                    <div class="col-sm d-flex justify-content-center mt-5">
-                        <button type="submit" class="btn btn-success">Build MVICFG</button>
-                    </div>
+
+                    </form>
                 </div>
-            </form>
-        </section>
-
+            </div>
+        </div>
 
     </div>
-    
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-    </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-    </script>
-    <!-- development version, includes helpful console warnings -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script th:src="@{/js/app.js}" type="text/javascript"/>
+</div>
 
+<!--<th:block th:replace="common/footer :: footer"></th:block>-->
 </body>
-
 </html>
