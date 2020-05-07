@@ -3,7 +3,7 @@
 ## What this project is about ##
 This is an web application that allows user to publish articles and to download them in different format including HTML, JSON and XML format.
 
-##Technology and Frameworks being used in this project ##
+## Technology and Frameworks being used in this project ##
 1. Spring Boot has the charge of managing server side code
 2. Spotify docker-client has been used to communicate with docker instance
 3. Maven used as build and dependency management tool
@@ -16,7 +16,7 @@ This is an web application that allows user to publish articles and to download 
 3. JDK (Version: 1.8)
 
 
-##Project Structure ##
+## Project Structure ##
 1. /src/main/resources/ - contains client side code
 2. /src/main/resources/templates/ - contains HTML code
 3. /src/main/resources/static/ - contains CSS and necessary javascript code
@@ -51,7 +51,7 @@ To configure application, open /src/main/resources/application.properties and mo
 3. Application will be deployed at default port 9080 (If available). 
 4. If port 9080 is not available, you can run with port of your choice with command line arguments. For example, to run in port 9070, type: ./mvnw clean spring-boot:run -Drun.arguments="--server.port=9070"
 
-##Instructions for uploading zip file:
+## Instructions for uploading zip file:
 1. Create a empty folder.
 2. Move all c files inside that empty directory.
 3. Archive the folder. It should have .zip extension.
