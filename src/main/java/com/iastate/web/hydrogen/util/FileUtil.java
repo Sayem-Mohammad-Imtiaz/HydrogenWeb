@@ -1,5 +1,7 @@
 package com.iastate.web.hydrogen.util;
 
+import jnr.ffi.annotations.In;
+import model.Graph;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
@@ -10,14 +12,91 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class FileUtil {
+
+    public static Graph getAddedGraph(String path) throws IOException {
+//        ArrayList<ArrayList<Integer> > adj
+//                = new ArrayList<ArrayList<Integer> >(10000);
+//        for (int i = 0; i < 10000; i++)
+//            adj.add(new ArrayList<Integer>());
+//        nodes=new ArrayList<>();
+        HashSet<Integer> tnodes=new HashSet<>();
+        Graph graph=new Graph();
+
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            while ((line = br.readLine()) != null) {
+                String[] splited = line.split("\\s+");
+                Integer u =Integer.parseInt(splited[0]);
+                Integer v =Integer.parseInt(splited[1]);
+                graph.getAdj().get(u).add(v);
+                graph.getAdj().get(v).add(u);
+                tnodes.add(u);
+                tnodes.add(v);
+
+            }
+        }
+        for(Integer n: tnodes)
+        {
+            graph.getNodes().add(n);
+        }
+
+        return graph;
+    }
+    public static ArrayList<String> getAddedPath(ArrayList<ArrayList<Integer>> adj,ArrayList<Integer> nodes)
+    {
+        ArrayList<String> output=new ArrayList<String>();
+        boolean []visited=new boolean[10000];
+        Arrays.fill(visited, false);
+        for (int i = 0; i < nodes.size(); i++)
+        {
+            List<Integer> pathEncountered=new ArrayList<>();
+            if(visited[nodes.get(i)]==false)
+            {
+                //calling DFS
+                pathEncountered.add(nodes.get(i));
+                DepthFirstSearch(nodes.get(i),visited, adj, pathEncountered,output);
+
+            }
+        }
+        return output;
+    }
+    public static void DepthFirstSearch(int node, boolean [] visited, ArrayList<ArrayList<Integer>> ad_list, List<Integer> pathEncountered, List<String> output)
+    {
+
+        boolean checkLeafNode=true;
+
+        visited[node]=true;
+
+        for(int edgeNumber=0;edgeNumber<ad_list.get(node).size();edgeNumber++)
+        {
+            int next=ad_list.get(node).get(edgeNumber);
+
+            if(visited[next]==false)
+            {
+                pathEncountered.add(next);
+                checkLeafNode=false;
+                DepthFirstSearch(next, visited, ad_list, pathEncountered,output);
+                pathEncountered.remove(pathEncountered.size()-1);
+            }
+        }
+
+        if(checkLeafNode)
+        {
+            String p="";
+            for(int j=0;j<pathEncountered.size();j++)
+            {
+                if(j!=0)
+                    p+=" -> ";
+                p+=pathEncountered.get(j);
+            }
+            output.add(p);
+        }
+    }
 
     public static String createDiffFile(String file1, String file2, String outpath) throws IOException {
 //       System.out.println("Diff: "+file1+" "+file2);

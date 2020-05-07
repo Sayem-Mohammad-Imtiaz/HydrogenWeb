@@ -57,7 +57,7 @@ public class DockerService {
                 {
                     String filename=entry.getName();
                     filename=filename.substring(filename.lastIndexOf("/")+1,filename.length());
-                    if(!filename.equals("MVICFG.dot"))
+                    if(!filename.equals("MVICFG.dot") && !filename.equals("output_file.txt"))
                         continue;
 
                     filename=outputPath+"/"+filename;

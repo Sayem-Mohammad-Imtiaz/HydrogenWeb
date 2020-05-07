@@ -1,10 +1,23 @@
 
+function downloadMVICFG()
+{
+//    var win = window.open('mvicfg/download/'+$('select').find(":selected").val());
+
+    var downloadLink = document.createElement("a");
+    downloadLink.href = 'mvicfg/download/'+$('select').find(":selected").val();
+    downloadLink.download = $('select').find(":selected").val()+"_mvicfg.dot";
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}
 
 $(document).ready(function(){
     $('select').on('change', function() {
         loadMVICFG(this.value);
         loadSummary(this.value);
     });
+
 
     function loadMVICFG(version)
     {
@@ -57,6 +70,15 @@ $(document).ready(function(){
 
                   str+='</tr>';
                   ref.append(str);
+
+                    $("#pathsadded").html('');
+                  for (var i = 0; i < result.pathsAdded.length; i++) {
+                      $("#pathsadded").append('<li>Path #'+(i+1)+': '+result.pathsAdded[i]);
+                  }
+                  $("#pathsremoved").html('');
+                  for (var i = 0; i < result.pathsAdded.length; i++) {
+                        $("#pathsremoved").append('<li>Path #'+(i+1)+': '+result.pathsRemoved[i]);
+                    }
 
                   console.log(result);
             }});

@@ -1,0 +1,26 @@
+--- hydrogen_analysis/user_program/prime/primev5.c	2020-05-07 14:09:59.000000000 -0500
++++ hydrogen_analysis/user_program/prime/primev6.c	2020-05-07 14:09:59.000000000 -0500
+@@ -8,3 +8,2 @@
+-	int max;
+-
+-	scanf("%d", &max);
++	int max=10000;
++	
+@@ -13 +12 @@
+-	while ( num < max )
++	while ( max < num )
+@@ -15,2 +14,2 @@
+-		if(isPrime(num)) { printf("%d\n", num); }
+-		num=num+3;
++		if(isPrime(num)) { printf("%d\n", num+1); }
++		num=num+2;
+@@ -18 +17 @@
+-	return 0;
++	return 1;
+@@ -24 +23 @@
+-        for(dev = 0; dev < n; dev++)
++        for(dev=0; dev < n/2; dev++)
+@@ -26,2 +25 @@
+-                if((n % dev) == 0) 
+-				{ return true; }
++                if((n % dev) == 0) { return false; }

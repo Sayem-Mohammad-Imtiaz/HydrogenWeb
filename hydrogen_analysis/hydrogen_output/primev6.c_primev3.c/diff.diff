@@ -1,0 +1,28 @@
+--- hydrogen_analysis/user_program/prime/primev6.c	2020-05-07 14:09:59.000000000 -0500
++++ hydrogen_analysis/user_program/prime/primev3.c	2020-05-07 14:09:59.000000000 -0500
+@@ -8,3 +8,2 @@
+-	int max=10000;
+-	
+-	int num = 0;
++	int num = 2;
++	int max;
+@@ -12 +11,4 @@
+-	while ( max < num )
++	printf("Input Maximum Prime: ");
++	scanf("%d", &max);
++
++	while ( num < max )
+@@ -14,2 +16,2 @@
+-		if(isPrime(num)) { printf("%d\n", num+1); }
+-		num=num+2;
++		if(isPrime(num)) { printf("%d\n", num); }
++		num++;
+@@ -17 +19 @@
+-	return 1;
++	return 0;
+@@ -22,2 +24,3 @@
+-		int dev;
+-        for(dev=0; dev < n/2; dev++)
++        int dev;
++
++        for(dev = 2; dev <= n/2; dev++)

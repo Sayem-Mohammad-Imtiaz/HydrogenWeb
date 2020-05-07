@@ -3,6 +3,7 @@ package com.iastate.web.hydrogen.controller;
 import com.iastate.web.hydrogen.service.DockerService;
 import com.iastate.web.hydrogen.util.FileUtil;
 import com.spotify.docker.client.exceptions.DockerException;
+import model.Graph;
 import model.Summary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 @org.springframework.stereotype.Controller
@@ -42,7 +46,21 @@ public class Controller {
         }
         return null;
     }
+    @RequestMapping(value = "/mvicfg/download/{file_name}", method = RequestMethod.GET)
+    public void getFile(
+            @PathVariable("file_name") String fileName,
+            HttpServletResponse response) {
+        try {
+            // get your file as InputStream
+            InputStream is = new FileInputStream(new File(this.testOutputDirectory+"/"+fileName+"/MVICFG.dot"));
+            // copy it to response's OutputStream
+            org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
+            response.flushBuffer();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
+    }
     @ResponseBody
     @GetMapping("mvicfg/summary/{version1}/{version2}")
     public Summary getSummary(@PathVariable String version1,@PathVariable String version2,HttpSession session, Model model) {
@@ -57,7 +75,17 @@ public class Controller {
             summary.setMvicfgNumNode(cfgsize[0]);
             summary.setMvicfgNumEdge(cfgsize[1]);
             summary.setMvicfgBuildTime(FileUtil.readBuildTime(this.testOutputDirectory+"/"+version1+"_"+version2+"/"+"buildtime.txt"));
-            summary.setChurnRate(FileUtil.getChurnRate(this.testOutputDirectory+"/"+version1+"_"+version2+"/"+"diff.diff"));
+            summary.setChurnRate(FileUtil.getChurnRate(
+                    this.testOutputDirectory+"/"+version1+"_"+version2+"/"+"diff.diff"));
+            Graph graph= FileUtil.getAddedGraph(
+                    this.testOutputDirectory + "/" + version1 + "_" + version2 + "/output_file.txt");
+
+            summary.setPathsAdded(FileUtil.getAddedPath(graph.getAdj(), graph.getNodes()));
+
+            graph= FileUtil.getAddedGraph(
+                    this.testOutputDirectory + "/" + version2 + "_" + version1 + "/output_file.txt");
+
+            summary.setPathsRemoved(FileUtil.getAddedPath(graph.getAdj(), graph.getNodes()));
         } catch (Exception e) {
             e.printStackTrace();
         }

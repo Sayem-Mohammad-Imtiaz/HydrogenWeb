@@ -1,0 +1,17 @@
+--- hydrogen_analysis/user_program/prime/primev2.c	2020-05-07 14:09:59.000000000 -0500
++++ hydrogen_analysis/user_program/prime/primev3.c	2020-05-07 14:09:59.000000000 -0500
+@@ -9 +9 @@
+-	int max =1;
++	int max;
+@@ -14 +14 @@
+-	while ( num > max )
++	while ( num < max )
+@@ -19,2 +19 @@
+-	
+-	return 1;
++	return 0;
+@@ -24,0 +24 @@
++        int dev;
+@@ -26 +26 @@
+-        for(int dev = 1; dev <= n; dev++)
++        for(dev = 2; dev <= n/2; dev++)

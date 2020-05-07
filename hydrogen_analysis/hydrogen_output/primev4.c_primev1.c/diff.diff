@@ -1,0 +1,15 @@
+--- hydrogen_analysis/user_program/prime/primev4.c	2020-05-07 14:09:59.000000000 -0500
++++ hydrogen_analysis/user_program/prime/primev1.c	2020-05-07 14:09:59.000000000 -0500
+@@ -8 +8 @@
+-	int max=2;
++	int max;
+@@ -10 +10,2 @@
+-	float num = 1.0;
++	scanf("%d", &max);
++	int num = 2;
+@@ -15 +16 @@
+-		num=num+2;
++		num=num+1;
+@@ -23 +24 @@
+-        for(int dev = 1; dev < n; dev++)
++        for(int dev = 2; dev < n; dev++)

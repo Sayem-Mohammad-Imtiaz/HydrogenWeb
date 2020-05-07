@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Summary {
     private String version1Name;
     private String version2Name;
@@ -7,7 +9,26 @@ public class Summary {
     private Integer version2Loc;
     private Integer churnRate;
     private Integer mvicfgNumNode;
+
+    public ArrayList<String> getPathsRemoved() {
+        return pathsRemoved;
+    }
+
+    public void setPathsRemoved(ArrayList<String> pathsRemoved) {
+        this.pathsRemoved = pathsRemoved;
+    }
+
     private Float mvicfgBuildTime;
+    private ArrayList<String> pathsAdded;
+    private ArrayList<String> pathsRemoved;
+
+    public ArrayList<String> getPathsAdded() {
+        return pathsAdded;
+    }
+
+    public void setPathsAdded(ArrayList<String> pathsAdded) {
+        this.pathsAdded = pathsAdded;
+    }
 
     public Float getMvicfgBuildTime() {
         return mvicfgBuildTime;
