@@ -16,6 +16,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class FileUtil {
+    public static String readFile(String path) throws IOException {
+        FileInputStream fisTargetFile = new FileInputStream(new File(path));
+
+        return IOUtils.toString(fisTargetFile, "UTF-8");
+    }
     public static void createUploadDir(String uploadDir) throws IOException {
         File directory = new File(uploadDir);
         if (!directory.exists()) {

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <th:block th:replace="common/includes :: includes"></th:block>
+    <script src="//d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/@hpcc-js/wasm@0.3.6/dist/index.min.js"></script>
+    <script src="https://unpkg.com/d3-graphviz@3.0.0/build/d3-graphviz.js"></script>
+    <script th:src="@{/js/result.js}" type="text/javascript"></script>
+    <title>Hydrogen :: Web Interface</title>
+</head>
+<body>
+
+
+<div id="wrapper">
+    <th:block th:replace="common/header :: header"></th:block>
+
+    <div id="page-wrapper">
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="jumbotron" style=  "overflow: scroll;">
+                    <div class="row">
+                        <div class="col-sm-offset-4 col-sm-4">
+                                <select class="form-control">
+                                    <option selected>Choose versions...</option>
+                                    <option th:each="instance : ${resultOptions}" th:value="${instance.key}">
+                                        [[${instance.value}]]
+                                    </option>
+                                </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 5px">
+                        <div class="col-sm-12">
+                            <div id="graph" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--<th:block th:replace="common/footer :: footer"></th:block>-->
+</body>
+</html>

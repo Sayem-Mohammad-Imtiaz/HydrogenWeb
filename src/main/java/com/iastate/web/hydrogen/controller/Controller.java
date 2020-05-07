@@ -6,17 +6,12 @@ import com.spotify.docker.client.exceptions.DockerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @org.springframework.stereotype.Controller
 @RequestMapping("/")
@@ -32,7 +27,19 @@ public class Controller {
 
     @GetMapping
     public String getHome(Model model) {
-        return "index";
+        return "index2";
+    }
+
+    @ResponseBody
+    @GetMapping("mvicfg/json/{versionId}")
+    public String getMVICFGInJson(@PathVariable String versionId, Model model) {
+        try {
+            return FileUtil.readFile(this.testOutputDirectory+"/"+versionId+"/MVICFG.dot");
+//            System.out.println(mvicfg.getDiagraph());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @PostMapping("/analyze") // //new annotation since 4.3
@@ -43,6 +50,7 @@ public class Controller {
             model.addAttribute("message", "Please select a file to upload");
             return "redirect:uploadStatus";
         }
+        Map<String,String> resultOptions=new HashMap<>();
 
         try {
             FileUtil.createUploadDir(this.uploadDirectory);
@@ -74,11 +82,8 @@ public class Controller {
             }
             for(int i=0; i<version_file_names.size();i++)
             {
-                for(int j=0; j<version_file_names.size();j++)
+                for(int j=i+1; j<version_file_names.size();j++)
                 {
-                    if(i==j)
-                        continue;
-
                     dockerService.runHydrogen(this.hydrogenTestDirectory,
                             version_file_names.get(i),
                             version_file_names.get(j),
@@ -86,6 +91,8 @@ public class Controller {
                             version_file_bc_names.get(j));
 
                     dockerService.copyFromDocker("BuildNinja", this.testOutputDirectory+"/"+"v"+(i+1)+"_v"+(j+1));
+                    resultOptions.put("v"+(i+1)+"_v"+(j+1), "Version "+(i+1)+" - Version "+(j+1));
+
                 }
             }
 
@@ -96,7 +103,9 @@ public class Controller {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        model.addAttribute("resultOptions", resultOptions);
         model.addAttribute("message", "Files uploaded successfully");
-        return "index";
+        return "result";
     }
 }

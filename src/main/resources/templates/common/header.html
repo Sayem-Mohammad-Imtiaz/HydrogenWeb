@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+</head>
+<body>
+<th:block th:fragment="header">
+
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            </button>
+            <a class="navbar-brand" th:href="@{/news}">Hydrogen</a>
+        </div>
+
+        <ul class="nav navbar-top-links navbar-right">
+            <li th:class="${index eq 1}? 'active': null">
+                <a th:href="@{/}">
+                    <i class="fa fa-home"></i> Home
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</th:block>
+</body>
+</html>
